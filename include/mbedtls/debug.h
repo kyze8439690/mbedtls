@@ -40,29 +40,67 @@
 
 #define MBEDTLS_DEBUG_STRIP_PARENS( ... )   __VA_ARGS__
 
+#ifdef SS_NG
+#define __FILENAME__ (strrchr(__FILE__,'\\') + 1)
+#define MBEDTLS_SSL_DEBUG_MSG( level, args )                    \
+    mbedtls_debug_print_msg( ssl, level, __FILENAME__, __LINE__,\
+                             MBEDTLS_DEBUG_STRIP_PARENS args )
+#else
 #define MBEDTLS_SSL_DEBUG_MSG( level, args )                    \
     mbedtls_debug_print_msg( ssl, level, __FILE__, __LINE__,    \
                              MBEDTLS_DEBUG_STRIP_PARENS args )
+#endif
 
+#ifdef SS_NG
+#define MBEDTLS_SSL_DEBUG_RET( level, text, ret )                \
+    mbedtls_debug_print_ret( ssl, level, __FILENAME__, __LINE__, text, ret )
+#else
 #define MBEDTLS_SSL_DEBUG_RET( level, text, ret )                \
     mbedtls_debug_print_ret( ssl, level, __FILE__, __LINE__, text, ret )
+#endif
 
+#ifdef SS_NG
+#define MBEDTLS_SSL_DEBUG_BUF( level, text, buf, len )           \
+    mbedtls_debug_print_buf( ssl, level, __FILENAME__, __LINE__, text, buf, len )
+#else
 #define MBEDTLS_SSL_DEBUG_BUF( level, text, buf, len )           \
     mbedtls_debug_print_buf( ssl, level, __FILE__, __LINE__, text, buf, len )
+#endif
 
+#ifdef SS_NG
+#if defined(MBEDTLS_BIGNUM_C)
+#define MBEDTLS_SSL_DEBUG_MPI( level, text, X )                  \
+    mbedtls_debug_print_mpi( ssl, level, __FILENAME__, __LINE__, text, X )
+#endif
+#else
 #if defined(MBEDTLS_BIGNUM_C)
 #define MBEDTLS_SSL_DEBUG_MPI( level, text, X )                  \
     mbedtls_debug_print_mpi( ssl, level, __FILE__, __LINE__, text, X )
 #endif
+#endif
 
+#ifdef SS_NG
+#if defined(MBEDTLS_ECP_C)
+#define MBEDTLS_SSL_DEBUG_ECP( level, text, X )                  \
+    mbedtls_debug_print_ecp( ssl, level, __FILENAME__, __LINE__, text, X )
+#endif
+#else
 #if defined(MBEDTLS_ECP_C)
 #define MBEDTLS_SSL_DEBUG_ECP( level, text, X )                  \
     mbedtls_debug_print_ecp( ssl, level, __FILE__, __LINE__, text, X )
 #endif
+#endif
 
+#ifdef SS_NG
+#if defined(MBEDTLS_X509_CRT_PARSE_C)
+#define MBEDTLS_SSL_DEBUG_CRT( level, text, crt )                \
+    mbedtls_debug_print_crt( ssl, level, __FILENAME__, __LINE__, text, crt )
+#endif
+#else
 #if defined(MBEDTLS_X509_CRT_PARSE_C)
 #define MBEDTLS_SSL_DEBUG_CRT( level, text, crt )                \
     mbedtls_debug_print_crt( ssl, level, __FILE__, __LINE__, text, crt )
+#endif
 #endif
 
 #else /* MBEDTLS_DEBUG_C */
